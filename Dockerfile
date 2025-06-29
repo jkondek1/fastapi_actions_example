@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.10-slim
 LABEL authors='Jakub Kondek, SDA'
 
 ARG HOSTNAME=0.0.0.0
