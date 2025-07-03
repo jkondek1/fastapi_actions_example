@@ -31,8 +31,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Build Docker image
         run: |
           docker build -t fastapi-demo:latest .
@@ -55,7 +57,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/fastapi-demo:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-demo:latest
 
       - name: SSH and Deploy
         uses: appleboy/ssh-action@master
@@ -65,11 +67,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # Pull the latest image
-            docker pull ${{ secrets.DOCKER_USERNAME }}/fastapi-demo:latest
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-demo:latest
 
             # Stop and remove existing container if it exists
             docker stop fastapi-container || true
             docker rm fastapi-container || true
 
             # Run the new container
-            docker run -d --name fastapi-container -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/fastapi-demo:latest
+            docker run -d --name fastapi-container -p 8000:8000 ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-demo:latest
