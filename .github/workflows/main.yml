@@ -3,6 +3,7 @@ name: CI/CD pipeline
 on:
   push:
     branches: [main, alternative]
+  workflow_dispatch:
 
 jobs:
   test:
