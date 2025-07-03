@@ -4,6 +4,8 @@ LABEL authors='Jakub Kondek, SDA'
 ENV HOSTNAME=0.0.0.0
 ENV PORT=8000
 
+MAINTAINER Jakub
+
 WORKDIR /app
 
 COPY requirements.txt .
