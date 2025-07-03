@@ -13,4 +13,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD uvicorn app:app
+CMD uvicorn app:app --host $HOSTNAME --port $PORT
