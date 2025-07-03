@@ -17,4 +17,4 @@ EXPOSE 8000
 
 ENV HOSTNAME=0.0.0.0
 ENV PORT=8000
-CMD ["uvicorn", "app:app", "--host", "${HOSTNAME}", "--port", "${PORT}"]
+CMD ["sh", "-c", "uvicorn app:app --host ${HOSTNAME} --port ${PORT}"]
