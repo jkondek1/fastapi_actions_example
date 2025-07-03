@@ -36,3 +36,40 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t fastapi-demo:latest .
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-image
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/fastapi-demo:latest
+
+      - name: SSH and Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Pull the latest image
+            docker pull ${{ secrets.DOCKER_USERNAME }}/fastapi-demo:latest
+
+            # Stop and remove existing container if it exists
+            docker stop fastapi-container || true
+            docker rm fastapi-container || true
+
+            # Run the new container
+            docker run -d --name fastapi-container -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/fastapi-demo:latest
