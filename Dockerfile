@@ -1,8 +1,8 @@
 FROM python:3.10-slim
 LABEL authors='Jakub Kondek, SDA'
 
-ARG HOSTNAME=0.0.0.0
-ARG PORT=8000
+ENV HOSTNAME=0.0.0.0
+ENV PORT=8000
 
 WORKDIR /app
 
@@ -13,4 +13,6 @@ COPY . .
 
 EXPOSE 8000
 
-CMD uvicorn app:app --host $HOSTNAME --port $PORT
+ENV HOSTNAME=0.0.0.0
+ENV PORT=8000
+CMD ["uvicorn", "app:app", "--host", "${HOSTNAME}", "--port", "${PORT}"]
